@@ -53,8 +53,20 @@ echo ""
 # 3. 安装 Python 依赖
 echo -e "${GREEN}[3/7] Installing Python dependencies...${NC}"
 pip install --upgrade pip -q
-pip install -r requirements.txt -q
+
+# 修复 torchaudio 版本冲突
+echo "Removing conflicting torchaudio version..."
+pip uninstall torchaudio -y > /dev/null 2>&1 || true
+
+# 安装正确版本的 PyTorch 生态系统
+echo "Installing PyTorch 2.3.1 with CUDA 11.8..."
+pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https://download.pytorch.org/whl/cu118 -q
+
+# 安装其他依赖
+echo "Installing other dependencies..."
+pip install numpy==1.26.1 Pillow huggingface_hub einops safetensors -q
 pip install -r requirements_demo.txt -q
+
 echo "✓ Dependencies installed"
 echo ""
 

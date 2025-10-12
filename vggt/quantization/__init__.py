@@ -10,6 +10,8 @@ from .quantizer import (
     calibrate_model,
     convert_to_quantized,
     QuantizationConfig,
+    estimate_model_size,
+    compare_model_outputs,
 )
 
 __all__ = [
@@ -18,4 +20,6 @@ __all__ = [
     "calibrate_model",
     "convert_to_quantized",
     "QuantizationConfig",
+    "estimate_model_size",
+    "compare_model_outputs",
 ]
