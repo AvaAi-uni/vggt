@@ -14,6 +14,15 @@ from .quantizer import (
     compare_model_outputs,
 )
 
+from .advanced_quantizer import (
+    quantize_model_advanced,
+    AdvancedQuantConfig,
+    SymmetricQuantizer,
+    AsymmetricQuantizer,
+    GroupWiseQuantizer,
+    compare_quantization_methods,
+)
+
 __all__ = [
     "quantize_model",
     "prepare_model_for_quantization",
@@ -22,4 +31,10 @@ __all__ = [
     "QuantizationConfig",
     "estimate_model_size",
     "compare_model_outputs",
+    "quantize_model_advanced",
+    "AdvancedQuantConfig",
+    "SymmetricQuantizer",
+    "AsymmetricQuantizer",
+    "GroupWiseQuantizer",
+    "compare_quantization_methods",
 ]

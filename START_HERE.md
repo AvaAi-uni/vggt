@@ -1,4 +1,26 @@
-# 🚀 开始使用 - VGGT INT8 量化
+# 🚀 开始使用 - VGGT 量化与对比
+
+## ⚡ 新功能：量化方案对比 ⭐
+
+现在支持对比多种量化方案：
+- ✅ INT8 对称量化
+- ✅ INT8 非对称量化
+- ✅ INT4 分组量化
+- ✅ PyTorch 动态量化
+
+**一键对比所有方案：**
+
+```bash
+cd /workspace/vggt && \
+python scripts/compare_quantization.py \
+    --image_folder /workspace/data/eth3d/courtyard/images \
+    --max_images 5 \
+    --output_dir /workspace/quantization_comparison
+```
+
+详细说明：[QUANTIZATION_COMPARISON_GUIDE.md](QUANTIZATION_COMPARISON_GUIDE.md)
+
+---
 
 ## 快速开始（仅需 3 步）
 
@@ -31,7 +53,20 @@ python scripts/quantize_model.py \
 
 根据你的需求，选择合适的文档：
 
-### 🎯 我想快速开始
+### ⚡ 我想对比不同的量化方案 ⭐ 新功能
+→ 阅读 **[QUANTIZATION_COMPARISON_GUIDE.md](QUANTIZATION_COMPARISON_GUIDE.md)**
+- INT8 对称 vs 非对称量化
+- INT4 分组量化
+- 完整的精度对比
+- 性能基准测试
+
+### 🚀 我想快速看到所有命令 ⭐ 推荐
+→ 阅读 **[QUANTIZATION_QUICK_COMMANDS.md](QUANTIZATION_QUICK_COMMANDS.md)**
+- 所有命令可直接复制
+- 量化对比一键运行
+- 约 5 分钟上手
+
+### 🎯 我想快速开始基础量化
 → 阅读 **[RUNPOD_COMMANDS.md](RUNPOD_COMMANDS.md)**
 - 包含所有需要的命令
 - 按顺序复制粘贴即可
@@ -50,10 +85,11 @@ python scripts/quantize_model.py \
 - 性能基准测试
 
 ### 🐛 我遇到了错误
-→ 阅读 **[FIXES_APPLIED.md](FIXES_APPLIED.md)**
+→ 阅读 **[FIXES_APPLIED.md](FIXES_APPLIED.md)** 或 **[UPDATES_AND_FIXES.md](UPDATES_AND_FIXES.md)**
 - 常见问题修复
 - 依赖冲突解决
 - 诊断脚本
+- 最新更新说明
 
 ### 🔬 我想了解技术实现
 → 阅读 **[IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)**
