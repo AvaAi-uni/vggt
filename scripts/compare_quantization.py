@@ -99,6 +99,9 @@ def run_quantization_comparison(
             dtype=torch.qint8
         )
         quant_model = quantize_model(model, config)
+
+        # 重要：将整个模型（包括所有 buffers）移到 CPU
+        quant_model = quant_model.cpu()
         quant_model.eval()
 
         start_time = time.time()
