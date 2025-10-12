@@ -23,6 +23,7 @@ import time
 from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib
+import traceback
 matplotlib.use('Agg')
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -75,6 +76,17 @@ def run_quantization_comparison(
     original_time = time.time() - start_time
     print(f"  Inference time: {original_time:.4f}s")
 
+    # 检查输出格式
+    if isinstance(original_output, dict):
+        print(f"  Output keys: {list(original_output.keys())}")
+        for key, value in original_output.items():
+            if isinstance(value, torch.Tensor):
+                print(f"    {key}: tensor {value.shape}")
+            else:
+                print(f"    {key}: {type(value)}")
+    else:
+        print(f"  Output type: {type(original_output)}")
+
     # 测试不同量化方案
     print("\n[4/5] Testing quantization methods...")
     results = {}
@@ -109,6 +121,7 @@ def run_quantization_comparison(
         print(f"    Size: {quant_size['total_mb']:.2f} MB | Time: {quant_time:.4f}s | Compression: {results['PyTorch_Dynamic_INT8']['compression_ratio']:.2f}x")
     except Exception as e:
         print(f"    Error: {e}")
+        print(f"    Traceback: {traceback.format_exc()}")
         results["PyTorch_Dynamic_INT8"] = {"error": str(e)}
 
     # 2. INT8 对称量化
@@ -128,6 +141,10 @@ def run_quantization_comparison(
             quant_output = quant_model(images)
         quant_time = time.time() - start_time
 
+        # 调试：检查输出类型
+        if not isinstance(quant_output, dict):
+            print(f"    Warning: Output is {type(quant_output)}, not dict")
+
         quant_size = estimate_model_size(quant_model)
 
         metrics = calculate_metrics(original_output, quant_output)
@@ -142,6 +159,7 @@ def run_quantization_comparison(
         print(f"    Size: {quant_size['total_mb']:.2f} MB | Time: {quant_time:.4f}s | Compression: {results['INT8_Symmetric']['compression_ratio']:.2f}x")
     except Exception as e:
         print(f"    Error: {e}")
+        print(f"    Traceback: {traceback.format_exc()}")
         results["INT8_Symmetric"] = {"error": str(e)}
 
     # 3. INT8 非对称量化
@@ -161,6 +179,10 @@ def run_quantization_comparison(
             quant_output = quant_model(images)
         quant_time = time.time() - start_time
 
+        # 调试：检查输出类型
+        if not isinstance(quant_output, dict):
+            print(f"    Warning: Output is {type(quant_output)}, not dict")
+
         quant_size = estimate_model_size(quant_model)
 
         metrics = calculate_metrics(original_output, quant_output)
@@ -175,6 +197,7 @@ def run_quantization_comparison(
         print(f"    Size: {quant_size['total_mb']:.2f} MB | Time: {quant_time:.4f}s | Compression: {results['INT8_Asymmetric']['compression_ratio']:.2f}x")
     except Exception as e:
         print(f"    Error: {e}")
+        print(f"    Traceback: {traceback.format_exc()}")
         results["INT8_Asymmetric"] = {"error": str(e)}
 
     # 4. INT4 分组量化 (Group=128)
@@ -195,6 +218,10 @@ def run_quantization_comparison(
             quant_output = quant_model(images)
         quant_time = time.time() - start_time
 
+        # 调试：检查输出类型
+        if not isinstance(quant_output, dict):
+            print(f"    Warning: Output is {type(quant_output)}, not dict")
+
         quant_size = estimate_model_size(quant_model)
 
         metrics = calculate_metrics(original_output, quant_output)
@@ -209,6 +236,7 @@ def run_quantization_comparison(
         print(f"    Size: {quant_size['total_mb']:.2f} MB | Time: {quant_time:.4f}s | Compression: {results['INT4_Group128']['compression_ratio']:.2f}x")
     except Exception as e:
         print(f"    Error: {e}")
+        print(f"    Traceback: {traceback.format_exc()}")
         results["INT4_Group128"] = {"error": str(e)}
 
     # 5. INT4 分组量化 (Group=64)
@@ -229,6 +257,10 @@ def run_quantization_comparison(
             quant_output = quant_model(images)
         quant_time = time.time() - start_time
 
+        # 调试：检查输出类型
+        if not isinstance(quant_output, dict):
+            print(f"    Warning: Output is {type(quant_output)}, not dict")
+
         quant_size = estimate_model_size(quant_model)
 
         metrics = calculate_metrics(original_output, quant_output)
@@ -243,15 +275,22 @@ def run_quantization_comparison(
         print(f"    Size: {quant_size['total_mb']:.2f} MB | Time: {quant_time:.4f}s | Compression: {results['INT4_Group64']['compression_ratio']:.2f}x")
     except Exception as e:
         print(f"    Error: {e}")
+        print(f"    Traceback: {traceback.format_exc()}")
         results["INT4_Group64"] = {"error": str(e)}
 
     # 添加原始模型信息
+    original_metrics = {}
+    if isinstance(original_output, dict):
+        for k, v in original_output.items():
+            if k != "images" and isinstance(v, torch.Tensor):
+                original_metrics[k] = {"mae": 0.0, "mse": 0.0, "psnr": float('inf')}
+
     results["Original_FP32"] = {
         "model_size_mb": original_size['total_mb'],
         "inference_time": original_time,
         "compression_ratio": 1.0,
         "speedup": 1.0,
-        "metrics": {k: {"mae": 0.0, "mse": 0.0, "psnr": float('inf')} for k in original_output.keys() if k != "images"}
+        "metrics": original_metrics
     }
 
     # 生成报告
@@ -280,8 +319,20 @@ def calculate_metrics(original_output, quantized_output):
             if key == "images":
                 continue
 
-            orig = original_output[key].cpu().float()
-            quant = quantized_output[key].cpu().float()
+            # 检查输出类型
+            if not isinstance(original_output[key], torch.Tensor):
+                continue
+            if not isinstance(quantized_output[key], torch.Tensor):
+                continue
+
+            # 确保都在 CPU 上并转为 float
+            orig = original_output[key].detach().cpu().float()
+            quant = quantized_output[key].detach().cpu().float()
+
+            # 检查形状是否匹配
+            if orig.shape != quant.shape:
+                print(f"Warning: Shape mismatch for {key}: {orig.shape} vs {quant.shape}")
+                continue
 
             mse = torch.mean((orig - quant) ** 2).item()
             mae = torch.mean(torch.abs(orig - quant)).item()
