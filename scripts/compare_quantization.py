@@ -485,16 +485,44 @@ def main():
     # 获取测试图像
     image_folder = Path(args.image_folder)
     image_extensions = {'.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'}
+
+    # 首先检查当前目录是否有图像
     image_paths = sorted([
         str(p) for p in image_folder.iterdir()
-        if p.suffix in image_extensions
-    ])[:args.max_images]
+        if p.is_file() and p.suffix in image_extensions
+    ])
+
+    # 如果当前目录没有图像，检查是否有 dslr_images_undistorted 子目录
+    if len(image_paths) == 0:
+        dslr_folder = image_folder / "dslr_images_undistorted"
+        if dslr_folder.exists() and dslr_folder.is_dir():
+            print(f"No images in {image_folder}, checking {dslr_folder}...")
+            image_paths = sorted([
+                str(p) for p in dslr_folder.iterdir()
+                if p.is_file() and p.suffix in image_extensions
+            ])
+
+    # 如果还是没有图像，递归搜索
+    if len(image_paths) == 0:
+        print(f"Searching for images recursively in {image_folder}...")
+        image_paths = sorted([
+            str(p) for p in image_folder.rglob("*")
+            if p.is_file() and p.suffix in image_extensions
+        ])
+
+    # 限制图像数量
+    image_paths = image_paths[:args.max_images]
 
     if len(image_paths) == 0:
         print(f"ERROR: No images found in {image_folder}")
+        print(f"Searched for extensions: {image_extensions}")
+        print(f"Directory contents:")
+        for item in image_folder.iterdir():
+            print(f"  {item.name} ({'dir' if item.is_dir() else 'file'})")
         return
 
     print(f"Found {len(image_paths)} test images")
+    print(f"First image: {image_paths[0]}")
 
     # 运行对比
     results = run_quantization_comparison(
