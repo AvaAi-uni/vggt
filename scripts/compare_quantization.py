@@ -93,39 +93,13 @@ def run_quantization_comparison(
 
     # 1. PyTorch 动态量化
     print("\n  [1/5] PyTorch Dynamic INT8...")
-    try:
-        config = QuantizationConfig(
-            quantization_type="dynamic",
-            dtype=torch.qint8
-        )
-        quant_model = quantize_model(model, config)
-
-        # 重要：将整个模型（包括所有 buffers）移到 CPU
-        quant_model = quant_model.cpu()
-        quant_model.eval()
-
-        start_time = time.time()
-        with torch.no_grad():
-            quant_output = quant_model(images.cpu())
-        quant_time = time.time() - start_time
-
-        quant_size = estimate_model_size(quant_model)
-
-        # 计算精度指标
-        metrics = calculate_metrics(original_output, quant_output)
-
-        results["PyTorch_Dynamic_INT8"] = {
-            "model_size_mb": quant_size['total_mb'],
-            "inference_time": quant_time,
-            "compression_ratio": original_size['total_mb'] / quant_size['total_mb'],
-            "speedup": original_time / quant_time,
-            "metrics": metrics
-        }
-        print(f"    Size: {quant_size['total_mb']:.2f} MB | Time: {quant_time:.4f}s | Compression: {results['PyTorch_Dynamic_INT8']['compression_ratio']:.2f}x")
-    except Exception as e:
-        print(f"    Error: {e}")
-        print(f"    Traceback: {traceback.format_exc()}")
-        results["PyTorch_Dynamic_INT8"] = {"error": str(e)}
+    print("    ⚠️  Skipped: PyTorch Dynamic quantization is incompatible with VGGT's custom attention layers")
+    print("    Reason: 'apply_dynamic is not implemented for this packed parameter type'")
+    print("    Recommendation: Use our custom INT8 Symmetric/Asymmetric quantization instead")
+    results["PyTorch_Dynamic_INT8"] = {
+        "error": "Incompatible with VGGT custom layers - use custom quantization methods instead",
+        "skipped": True
+    }
 
     # 2. INT8 对称量化
     print("\n  [2/5] INT8 Symmetric...")
