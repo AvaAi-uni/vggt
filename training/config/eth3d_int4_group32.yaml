@@ -1,0 +1,16 @@
+# ============================================================================
+# ETH3D + INT4 Group-wise Quantization (Group Size 32) 配置
+# ============================================================================
+# Group Size 32：最精细的量化粒度，接近Per-Channel效果
+
+defaults:
+  - eth3d_int4_group128
+
+exp_name: eth3d_int4_group32
+
+quantization:
+  current_scheme: "int4_group_32"
+  group_size: 32            # 最小的group size
+
+# Group-32在INT4中接近最优精度，但存储开销最大
+# 论文对比重点：寻找INT4量化的最佳Group Size

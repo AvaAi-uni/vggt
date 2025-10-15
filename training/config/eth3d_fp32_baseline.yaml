@@ -1,0 +1,323 @@
+# ============================================================================
+# ETH3D + FP32 Baseline 配置
+# ============================================================================
+#
+# 实验目的：建立完整精度（FP32）的性能基准
+# 论文用途：作为所有量化实验的对比基线
+#
+# 重要参数说明：
+# - 使用完整的 FP32 精度进行训练
+# - 启用 BF16 混合精度训练以加速（不影响最终精度）
+# - 使用标准的 AdamW 优化器和余弦退火学习率调度
+# - batch size 和 epoch 数需要根据 GPU 内存调整
+#
+# ============================================================================
+
+defaults:
+  - default_dataset.yaml
+
+# ============================================================================
+# 实验标识
+# ============================================================================
+exp_name: eth3d_fp32_baseline
+run_name: ${exp_name}
+
+# ============================================================================
+# 基础训练参数
+# ============================================================================
+img_size: 518              # 输入图像大小
+patch_size: 14             # ViT patch 大小
+num_workers: 4             # 数据加载线程数（根据CPU核心数调整）
+seed_value: 42             # 随机种子（保证可复现性）
+accum_steps: 2             # 梯度累积步数（模拟更大的batch size）
+
+# 训练轮数
+max_epochs: 30             # 最大训练轮数
+
+# 验证频率
+val_epoch_freq: 2          # 每2个epoch验证一次
+
+# Batch size 配置
+max_img_per_gpu: 12        # 每个GPU的最大图像数（根据GPU内存调整）
+
+# 快速实验选项（正式训练时设为null或删除）
+limit_train_batches: null  # 限制训练batch数量（null表示使用全部）
+limit_val_batches: null    # 限制验证batch数量（null表示使用全部）
+
+# ============================================================================
+# 量化配置（FP32 Baseline 不使用量化）
+# ============================================================================
+quantization:
+  enabled: False           # 禁用量化
+  current_scheme: "fp32"   # 标记为 FP32 baseline
+
+# ============================================================================
+# 数据集配置 - ETH3D
+# ============================================================================
+data:
+  train:
+    _target_: data.dynamic_dataloader.DynamicTorchDataset
+    num_workers: ${num_workers}
+    max_img_per_gpu: ${max_img_per_gpu}
+    common_config:
+      img_size: ${img_size}
+      patch_size: ${patch_size}
+      debug: False
+      repeat_batch: False
+      training: True
+      get_nearby: True          # 采样时间上接近的帧
+      load_depth: False         # ETH3D没有深度图
+      inside_random: True
+      allow_duplicate_img: True
+      # 数据增强
+      augs:
+        scales: [0.8, 1.2]      # 随机缩放范围
+      rescale: True
+      rescale_aug: True
+      landscape_check: True
+    dataset:
+      _target_: data.composed_dataset.ComposedDataset
+      dataset_configs:
+        - _target_: data.datasets.eth3d.ETH3DDataset
+          ETH3D_DIR: data/eth3d
+          split: train
+          min_num_images: 5
+          max_num_images: 20
+          len_train: 10000      # 虚拟数据集长度
+
+  val:
+    _target_: data.dynamic_dataloader.DynamicTorchDataset
+    num_workers: ${num_workers}
+    max_img_per_gpu: ${max_img_per_gpu}
+    common_config:
+      img_size: ${img_size}
+      patch_size: ${patch_size}
+      debug: False
+      repeat_batch: False
+      training: False
+      get_nearby: True
+      load_depth: False
+      inside_random: False
+      allow_duplicate_img: False
+      augs:
+        scales: null            # 验证时不使用增强
+      rescale: True
+      rescale_aug: False
+      landscape_check: True
+    dataset:
+      _target_: data.composed_dataset.ComposedDataset
+      dataset_configs:
+        - _target_: data.datasets.eth3d.ETH3DDataset
+          ETH3D_DIR: data/eth3d
+          split: test
+          min_num_images: 5
+          max_num_images: 20
+          len_test: 1000
+
+# ============================================================================
+# 损失函数配置
+# ============================================================================
+loss:
+  _target_: loss.MultitaskLoss
+
+  # 相机参数损失
+  camera:
+    weight: 5.0              # 相机损失权重
+    loss_type: "l1"          # l1, smooth_l1, l2
+    # 具体包含：
+    # - 平移损失 (loss_T)
+    # - 旋转损失 (loss_R)
+    # - 焦距损失 (loss_FL)
+
+  # 深度损失
+  depth:
+    weight: 1.0              # 深度损失权重
+    gradient_loss_fn: "grad" # 梯度一致性损失类型
+    valid_range: 0.98        # 有效深度值范围（top 98%）
+    # 具体包含：
+    # - 置信度加权损失 (loss_conf_depth)
+    # - L2回归损失 (loss_reg_depth)
+    # - 梯度平滑性损失 (loss_grad_depth)
+
+  # 点云损失（可选，当前未使用）
+  point: null
+
+  # 跟踪损失（可选，当前未使用）
+  track: null
+
+# ============================================================================
+# 模型配置
+# ============================================================================
+model:
+  _target_: vggt.models.vggt.VGGT
+  enable_camera: True        # 启用相机参数预测
+  enable_depth: True         # 启用深度预测
+  enable_point: False        # 禁用点云预测（减少计算量）
+  enable_track: False        # 禁用轨迹预测（减少计算量）
+
+  # 模型架构参数（使用默认值）
+  # img_size: ${img_size}
+  # patch_size: ${patch_size}
+  # embed_dim: 1024
+  # depth: 24
+  # num_heads: 16
+
+# ============================================================================
+# 优化器配置
+# ============================================================================
+optim:
+  param_group_modifiers: False
+
+  # AdamW优化器
+  optimizer:
+    _target_: torch.optim.AdamW
+    lr: 5e-5                 # 基础学习率
+    weight_decay: 0.05       # 权重衰减（L2正则化）
+    betas: [0.9, 0.999]
+    eps: 1e-8
+
+  # 冻结模块（如果需要）
+  frozen_module_names: []
+
+  # 混合精度训练（使用BF16加速，不影响最终FP32模型精度）
+  amp:
+    enabled: True
+    amp_dtype: bfloat16      # bfloat16 比 float16 更稳定
+
+  # 梯度裁剪（防止梯度爆炸）
+  gradient_clip:
+    _target_: train_utils.gradient_clip.GradientClipper
+    configs:
+      - module_name: ["aggregator"]
+        max_norm: 1.0
+        norm_type: 2
+      - module_name: ["depth"]
+        max_norm: 1.0
+        norm_type: 2
+      - module_name: ["camera"]
+        max_norm: 1.0
+        norm_type: 2
+
+  # 学习率调度器
+  options:
+    lr:
+      - scheduler:
+          _target_: fvcore.common.param_scheduler.CompositeParamScheduler
+          schedulers:
+            # Warm-up: 前5%的训练步骤
+            - _target_: fvcore.common.param_scheduler.LinearParamScheduler
+              start_value: 1e-7
+              end_value: 5e-5
+            # 余弦退火: 剩余95%的训练步骤
+            - _target_: fvcore.common.param_scheduler.CosineParamScheduler
+              start_value: 5e-5
+              end_value: 1e-7
+          lengths: [0.05, 0.95]
+          interval_scaling: ['rescaled', 'rescaled']
+
+    weight_decay:
+      - scheduler:
+          _target_: fvcore.common.param_scheduler.ConstantParamScheduler
+          value: 0.05
+
+# ============================================================================
+# 日志配置
+# ============================================================================
+logging:
+  log_dir: logs/${exp_name}
+  log_visuals: True          # 启用可视化
+  log_freq: 10               # 每10个batch记录一次
+  log_level_primary: INFO
+  log_level_secondary: WARNING
+  all_ranks: False           # 只在主进程记录
+
+  tensorboard_writer:
+    _target_: train_utils.tb_writer.TensorBoardLogger
+    path: ${logging.log_dir}/tensorboard
+
+  # 记录的标量指标
+  scalar_keys_to_log:
+    train:
+      keys_to_log:
+        - loss_objective      # 总损失
+        - loss_camera         # 相机损失
+        - loss_T              # 平移损失
+        - loss_R              # 旋转损失
+        - loss_FL             # 焦距损失
+        - loss_conf_depth     # 深度置信度损失
+        - loss_reg_depth      # 深度回归损失
+        - loss_grad_depth     # 深度梯度损失
+    val:
+      keys_to_log:
+        - loss_objective
+        - loss_camera
+        - loss_T
+        - loss_R
+        - loss_FL
+        - loss_conf_depth
+        - loss_reg_depth
+        - loss_grad_depth
+
+  # 可视化配置
+  log_visual_frequency:
+    train: 100
+    val: 50
+  visuals_per_batch_to_log: 4
+  video_logging_fps: 5
+
+  visuals_keys_to_log:
+    train:
+      modality: image
+      keys_to_log:
+        - images              # 输入图像
+        - pred_depths         # 预测深度图
+    val:
+      modality: image
+      keys_to_log:
+        - images
+        - pred_depths
+
+# ============================================================================
+# 检查点配置
+# ============================================================================
+checkpoint:
+  save_dir: ${logging.log_dir}/checkpoints
+  save_freq: 5               # 每5个epoch保存一次
+  resume_checkpoint_path: null  # 预训练模型路径（null表示从头训练）
+  strict: False              # 允许部分加载权重
+
+# ============================================================================
+# 训练模式
+# ============================================================================
+mode: train                  # train 或 val
+
+device: cuda
+
+# ============================================================================
+# 分布式训练配置
+# ============================================================================
+distributed:
+  backend: nccl              # Linux/RunPod 使用 nccl; Windows 使用 gloo
+  comms_dtype: null
+  find_unused_parameters: False
+  timeout_mins: 30
+  gradient_as_bucket_view: True
+  bucket_cap_mb: 25
+  broadcast_buffers: True
+
+# ============================================================================
+# CUDA配置
+# ============================================================================
+cuda:
+  cudnn_deterministic: False # 禁用确定性（提高速度）
+  cudnn_benchmark: True      # 启用cudnn benchmark（加速训练）
+  allow_tf32: True           # 允许TF32（提高性能）
+
+# ============================================================================
+# 环境变量（可选）
+# ============================================================================
+env_variables:
+  PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+  MKL_THREADING_LAYER: "GNU"
+  HYDRA_FULL_ERROR: "1"
+  NCCL_ASYNC_ERROR_HANDLING: "1"

@@ -1,0 +1,16 @@
+# ============================================================================
+# ETH3D + INT4 Group-wise Quantization (Group Size 64) 配置
+# ============================================================================
+# Group Size 64：更精细的量化粒度，理论上精度更高但开销略增
+
+defaults:
+  - eth3d_int4_group128     # 继承Group-128配置
+
+exp_name: eth3d_int4_group64
+
+quantization:
+  current_scheme: "int4_group_64"
+  group_size: 64            # 更小的group size
+
+# Group-64预期比Group-128精度更高，但存储开销更大
+# 论文对比重点：Group Size对精度-效率权衡的影响
