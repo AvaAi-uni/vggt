@@ -15,6 +15,36 @@
 [Jianyuan Wang](https://jytime.github.io/), [Minghao Chen](https://silent-chen.github.io/), [Nikita Karaev](https://nikitakaraevv.github.io/), [Andrea Vedaldi](https://www.robots.ox.ac.uk/~vedaldi/), [Christian Rupprecht](https://chrirupp.github.io/), [David Novotny](https://d-novotny.github.io/)
 </div>
 
+---
+
+## 🆕 Quantization Experiments (v3.0)
+
+**Complete FP32 to INT8/INT4 quantization framework with comprehensive evaluation**
+
+### ⚡ Quick Start on RunPod
+
+Run complete quantization experiments in **15 minutes** with a single command:
+
+```bash
+cd /workspace && git clone https://github.com/yourusername/vggt.git vggt && cd vggt && bash scripts/runpod_full_workflow.sh quick
+```
+
+**Features**:
+- ✅ 1 Baseline (FP32) + 7 quantization schemes (INT8/INT4)
+- ✅ 8 evaluation metrics (MAE, CE, PSNR, SSIM, etc.)
+- ✅ Automatic environment setup and data download
+- ✅ Professional visualization and reports
+
+**Documentation**:
+- 🚀 [**RUNPOD_PURE_WORKFLOW.md**](RUNPOD_PURE_WORKFLOW.md) - Fastest way to start (5 min)
+- 📖 [**RUNPOD_START_HERE.md**](RUNPOD_START_HERE.md) - Detailed 3-step guide (10 min)
+- 📚 [**COMPREHENSIVE_QUANTIZATION_GUIDE.md**](COMPREHENSIVE_QUANTIZATION_GUIDE.md) - Deep dive (30 min)
+- 📋 [**PROJECT_STRUCTURE.md**](PROJECT_STRUCTURE.md) - Complete project overview
+
+**Cost**: $0.10 - $0.40 on RunPod (RTX 4090, 15-60 minutes)
+
+---
+
 ```bibtex
 @inproceedings{wang2025vggt,
   title={VGGT: Visual Geometry Grounded Transformer},

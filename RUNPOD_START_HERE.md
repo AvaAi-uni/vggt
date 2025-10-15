@@ -1,11 +1,11 @@
 # RunPod 完整量化实验 - 从这里开始
 
-**⚡ 5步完成RunPod实验！**
+**⚡ 3步完成RunPod实验！**
 
-**版本**: 2.0 - Comprehensive Framework
+**版本**: 3.0 - 纯RunPod工作流
 **平台**: RunPod.io
-**预计时间**: 20-40分钟
-**预计费用**: $0.13 - $0.50
+**预计时间**: 15-30分钟
+**预计费用**: $0.10 - $0.40
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## 🚀 5步快速开始
+## 🚀 3步快速开始（纯RunPod操作）
 
 ### 步骤1: 创建RunPod实例（5分钟）
 
@@ -34,134 +34,106 @@
    - Volume Disk: 50GB（持久化）
 6. 点击 "Deploy On-Demand"
 
-**费用**: ~$0.20 用于设置
+**费用**: ~$0.15 用于设置和快速测试
 
 ---
 
-### 步骤2: 上传项目文件（5-10分钟）
+### 步骤2: 获取项目代码（2分钟）
 
 在RunPod终端运行：
 
 ```bash
-# 方法A: 使用Git（如果代码在GitHub）
+# 方法A: 从GitHub克隆（推荐）
 cd /workspace
 git clone https://github.com/yourusername/vggt.git vggt
 cd vggt
 ```
 
-或在**本地电脑**运行（使用SCP）:
-
 ```bash
-# Windows (Git Bash)
-cd "C:\Users\Ava Ai\Desktop\8539Project\code"
-scp -r -P <POD_SSH_PORT> ./vggt root@<POD_IP>:/workspace/
-
-# Linux/Mac
-cd ~/projects/code
-scp -r -P <POD_SSH_PORT> ./vggt root@<POD_IP>:/workspace/
+# 方法B: 从GitLab克隆
+cd /workspace
+git clone https://gitlab.com/yourusername/vggt.git vggt
+cd vggt
 ```
 
-**提示**: Pod的IP和端口在RunPod界面的"Connect"中查看
+```bash
+# 方法C: 手动上传ZIP到RunPod，然后解压
+cd /workspace
+unzip vggt.zip
+cd vggt
+```
+
+**注意**: 如果你的代码在Git仓库中，方法A最快最方便！
 
 ---
 
-### 步骤3: 一键设置环境（3-5分钟）
+### 步骤3: 一键运行完整实验（10-30分钟）
 
 在RunPod终端运行：
 
+#### 选项A: 快速测试（推荐首次使用，10-15分钟）
+
 ```bash
 cd /workspace/vggt
-bash scripts/runpod_setup_comprehensive.sh
+bash scripts/runpod_full_workflow.sh quick
 ```
 
-脚本会自动：
+#### 选项B: 标准测试（推荐提交作业，15-20分钟）
+
+```bash
+cd /workspace/vggt
+bash scripts/runpod_full_workflow.sh standard
+```
+
+#### 选项C: 完整测试（用于论文，30-60分钟）
+
+```bash
+cd /workspace/vggt
+bash scripts/runpod_full_workflow.sh full
+```
+
+**这一个命令会自动完成所有操作：**
 - ✅ 检查CUDA环境
 - ✅ 安装所有依赖
-- ✅ 下载测试数据（可选）
-- ✅ 创建快捷命令
+- ✅ 自动下载ETH3D数据
+- ✅ 运行量化实验
+- ✅ 显示结果摘要
 
-**选择下载ETH3D数据**: 输入 `y` 然后回车
-
----
-
-### 步骤4: 运行实验（5-15分钟）
-
-选择一个命令运行：
-
-#### 选项A: 快速测试（推荐新手，5-10分钟）
-
-```bash
-bash /workspace/run_quick_test.sh
-```
-
-#### 选项B: 标准测试（推荐提交，10-15分钟）
-
-```bash
-bash /workspace/run_standard_test.sh
-```
-
-#### 选项C: 完整测试（发论文，30-60分钟）
-
-```bash
-bash /workspace/run_full_test.sh
-```
-
-**实验会自动运行，你可以看着进度条或去喝杯咖啡☕**
+**实验会自动运行，你可以看着进度或去喝杯咖啡☕**
 
 ---
 
-### 步骤5: 下载结果（2分钟）
+## ✅ 完成！查看结果
 
-#### 5.1 先查看结果
-
-在RunPod终端：
+### 4.1 在RunPod终端查看文本报告
 
 ```bash
-cat /workspace/results/quick_test/comprehensive_report.txt
+# 查看完整报告
+cat /workspace/results/quick_test_*/comprehensive_report.txt
+
+# 查看前50行
+head -50 /workspace/results/quick_test_*/comprehensive_report.txt
 ```
 
-#### 5.2 下载到本地
+### 4.2 下载结果到本地（可选）
 
-在**本地电脑**运行：
-
-```bash
-# Windows (Git Bash)
-scp -r -P <POD_SSH_PORT> \
-    root@<POD_IP>:/workspace/results/quick_test \
-    C:/Users/Ava\ Ai/Desktop/results/
-
-# Linux/Mac
-scp -r -P <POD_SSH_PORT> \
-    root@<POD_IP>:/workspace/results/quick_test \
-    ~/Desktop/results/
-```
-
-或压缩后下载（更快）：
+在RunPod终端创建压缩包：
 
 ```bash
-# 在RunPod终端压缩
 cd /workspace
 tar -czf results.tar.gz results/
-
-# 在本地下载
-scp -P <POD_SSH_PORT> root@<POD_IP>:/workspace/results.tar.gz ~/Desktop/
-
-# 本地解压
-tar -xzf results.tar.gz
 ```
 
----
+然后在RunPod界面点击"Files"，下载 `/workspace/results.tar.gz` 文件
 
-## ✅ 完成！
-
-**停止Pod避免计费**: 在RunPod界面点击 "Stop"
+**完成后停止Pod避免计费**: 在RunPod界面点击 "Stop"
 
 ---
 
 ## 📊 你将得到的结果文件
 
 ```
-results/quick_test/
+/workspace/results/quick_test_20251016_123456/
 ├── comprehensive_results.json          # 完整数据（JSON格式）
 ├── comprehensive_report.txt            # 文本报告（复制即用）
 └── comprehensive_visualizations.png    # 可视化图表（6个子图）
@@ -195,72 +167,67 @@ INT4_Group_128               |  500.00  | 8.00x  | 0.0350  | 1.43x| 0.007891 | 0
 
 | 任务 | 时间 | GPU | 费用 |
 |------|------|-----|------|
-| 设置 + 快速测试 | ~20分钟 | RTX 4090 | ~$0.13 |
-| 标准测试 | ~40分钟 | RTX 4090 | ~$0.26 |
-| 完整测试 | ~90分钟 | RTX 4090 | ~$0.59 |
+| 快速测试 | ~15分钟 | RTX 4090 | ~$0.10 |
+| 标准测试 | ~20分钟 | RTX 4090 | ~$0.13 |
+| 完整测试 | ~60分钟 | RTX 4090 | ~$0.40 |
 
-**总费用**: $0.13 - $0.60
+**总费用**: $0.10 - $0.40
 
 ---
 
-## 🎓 完整流程（复制粘贴整段）
+## 🎓 超级快速流程（复制粘贴一行）
 
-如果你想一次性完成所有步骤，复制粘贴这整段到RunPod终端：
+如果你的代码已在GitHub，可以复制这一行到RunPod终端：
 
 ```bash
 # ============================================================================
-# RunPod 完整量化实验 - 一键流程
-# 复制粘贴这整段到RunPod终端
+# RunPod 完整量化实验 - 终极一键命令
 # ============================================================================
 
-# 假设项目已经上传到 /workspace/vggt
-
-# 步骤1: 环境设置
-echo "正在设置环境..."
-cd /workspace/vggt
-bash scripts/runpod_setup_comprehensive.sh <<< "y"
-
-# 步骤2: 运行快速测试
-echo "正在运行快速测试..."
-bash /workspace/run_quick_test.sh
-
-# 步骤3: 显示结果
-echo ""
-echo "=============================================================================="
-echo "✅ 实验完成！"
-echo "=============================================================================="
-echo ""
-cat /workspace/results/quick_test/comprehensive_report.txt | head -40
-echo ""
-echo "完整结果保存在: /workspace/results/quick_test/"
-echo "请下载结果到本地："
-echo "  scp -r -P <PORT> root@<IP>:/workspace/results/quick_test ~/Desktop/"
-echo ""
-echo "记得停止Pod以避免持续计费！"
-echo "=============================================================================="
+cd /workspace && \
+git clone https://github.com/yourusername/vggt.git vggt && \
+cd vggt && \
+bash scripts/runpod_full_workflow.sh quick
 ```
+
+**只需要改一个地方**: 把 `yourusername/vggt` 改成你的仓库地址！
+
+**15分钟后，你将拥有完整的实验结果！**
 
 ---
 
 ## ❓ 常见问题
 
-### Q1: 如何找到Pod的IP和SSH端口？
+### Q1: 如何获取项目代码到RunPod？
 
-**A**: 在RunPod界面点击"Connect" → "TCP Port Mappings"，查看：
-- **SSH Port**: 如 `12345`
-- **SSH String**: `ssh root@123.45.67.89 -p 12345`
-- IP就是 `123.45.67.89`
+**A**: 最简单的三种方法：
+
+```bash
+# 方法1: Git克隆（推荐）
+cd /workspace
+git clone https://github.com/yourusername/vggt.git vggt
+
+# 方法2: 从压缩包
+# 先在RunPod界面上传vggt.zip，然后：
+cd /workspace
+unzip vggt.zip
+
+# 方法3: 从网盘链接
+cd /workspace
+wget "https://your-drive-link.com/vggt.zip"
+unzip vggt.zip
+```
 
 ---
 
 ### Q2: CUDA out of memory怎么办？
 
-**A**: 减少测试图像数量：
+**A**: 使用更少的图像测试：
 
 ```bash
 cd /workspace/vggt
 python scripts/comprehensive_evaluation.py \
-    --image_folder /workspace/data/eth3d/courtyard/images \
+    --image_folder /workspace/data/eth3d/courtyard/dslr_images_undistorted \
     --max_images 3 \
     --output_dir /workspace/results/small_test
 ```
@@ -269,19 +236,20 @@ python scripts/comprehensive_evaluation.py \
 
 ### Q3: 找不到测试图像怎么办？
 
-**A**: 手动下载数据：
+**A**: 重新下载ETH3D数据：
 
 ```bash
 cd /workspace/vggt
 python scripts/download_eth3d.py --output_dir /workspace/data/eth3d
 ```
 
-或使用自己的图像：
+或使用自己的图像（在RunPod上传图像后）：
+
 ```bash
-mkdir -p /workspace/data/my_images
-# 上传图像到这个目录，然后：
+# 假设你上传图像到 /workspace/my_images
+cd /workspace/vggt
 python scripts/comprehensive_evaluation.py \
-    --image_folder /workspace/data/my_images \
+    --image_folder /workspace/my_images \
     --max_images 10 \
     --output_dir /workspace/results/my_test
 ```
@@ -290,72 +258,107 @@ python scripts/comprehensive_evaluation.py \
 
 ### Q4: 连接断开了怎么办？
 
-**A**: 使用tmux防止断开：
+**A**: 使用tmux防止断开（在RunPod终端）：
 
 ```bash
 # 创建tmux会话
 tmux new -s quantization
 
 # 在tmux中运行实验
-bash /workspace/run_standard_test.sh
+cd /workspace/vggt
+bash scripts/runpod_full_workflow.sh standard
 
-# 分离tmux: Ctrl+B, 然后 D
+# 分离tmux: Ctrl+B, 然后按 D
 # 重新连接: tmux attach -t quantization
 ```
 
 ---
 
-## 📚 进阶使用
+### Q5: 如何下载结果到本地？
 
-### 自定义实验
+**A**: 在RunPod终端创建压缩包：
+
+```bash
+cd /workspace
+tar -czf results.tar.gz results/
+```
+
+然后在RunPod Web界面：
+1. 点击 "Files"
+2. 找到 `/workspace/results.tar.gz`
+3. 点击下载
+
+---
+
+## 📚 进阶使用（所有在RunPod终端运行）
+
+### 自定义实验参数
 
 ```bash
 cd /workspace/vggt
 python scripts/comprehensive_evaluation.py \
-    --image_folder <YOUR_IMAGE_FOLDER> \
-    --max_images <NUMBER> \
-    --output_dir /workspace/results/<EXP_NAME> \
+    --image_folder /workspace/data/eth3d/courtyard/dslr_images_undistorted \
+    --max_images 20 \
+    --output_dir /workspace/results/custom_test \
     --device cuda
 ```
 
-### 后台运行
+### 后台运行长时间实验
 
 ```bash
 cd /workspace/vggt
-nohup bash /workspace/run_full_test.sh > /workspace/results/run.log 2>&1 &
+nohup bash scripts/runpod_full_workflow.sh full > /workspace/full_test.log 2>&1 &
 
 # 查看日志
-tail -f /workspace/results/run.log
+tail -f /workspace/full_test.log
+
+# 查看进程
+ps aux | grep runpod_full_workflow
 ```
 
 ### 批量实验
 
 ```bash
-# 运行多个实验
-bash /workspace/run_quick_test.sh
-bash /workspace/run_standard_test.sh
+# 运行多个不同场景
+cd /workspace/vggt
 
-# 或并行（小心GPU内存）
-bash /workspace/run_quick_test.sh &
-bash /workspace/run_standard_test.sh &
-wait
+for scene in courtyard delivery_area facade; do
+    python scripts/comprehensive_evaluation.py \
+        --image_folder /workspace/data/eth3d/$scene/dslr_images_undistorted \
+        --max_images 10 \
+        --output_dir /workspace/results/${scene}_test
+done
+```
+
+### 使用tmux运行长时间实验
+
+```bash
+# 创建tmux会话
+tmux new -s full_experiment
+
+# 在tmux中运行完整测试
+cd /workspace/vggt
+bash scripts/runpod_full_workflow.sh full
+
+# 按 Ctrl+B, 然后按 D 分离tmux
+# 稍后重新连接: tmux attach -t full_experiment
 ```
 
 ---
 
 ## 📖 文档导航
 
-### RunPod相关
+### RunPod相关（推荐阅读顺序）
 
-- **[RUNPOD_START_HERE.md](RUNPOD_START_HERE.md)** ← 你在这里（快速开始）
-- **[RUNPOD_COMPREHENSIVE_GUIDE.md](RUNPOD_COMPREHENSIVE_GUIDE.md)** - 完整RunPod指南（30分钟阅读）
-- **[RUNPOD_QUICK_COMMANDS.md](RUNPOD_QUICK_COMMANDS.md)** - 快速命令参考（查找命令）
+1. **[RUNPOD_START_HERE.md](RUNPOD_START_HERE.md)** ← 你在这里（快速开始，5分钟）
+2. **[RUNPOD_QUICK_COMMANDS.md](RUNPOD_QUICK_COMMANDS.md)** - 快速命令参考（查找命令时使用）
+3. **[RUNPOD_COMPREHENSIVE_GUIDE.md](RUNPOD_COMPREHENSIVE_GUIDE.md)** - 完整RunPod指南（深入学习）
 
 ### 实验相关
 
-- **[START_HERE_COMPREHENSIVE.md](START_HERE_COMPREHENSIVE.md)** - 项目总览
-- **[COMPREHENSIVE_QUANTIZATION_GUIDE.md](COMPREHENSIVE_QUANTIZATION_GUIDE.md)** - 量化指南
-- **[EXPERIMENT_PARAMETERS_EXPLAINED.md](EXPERIMENT_PARAMETERS_EXPLAINED.md)** - 参数详解
+4. **[START_HERE_COMPREHENSIVE.md](START_HERE_COMPREHENSIVE.md)** - 项目总览
+5. **[COMPREHENSIVE_QUANTIZATION_GUIDE.md](COMPREHENSIVE_QUANTIZATION_GUIDE.md)** - 量化原理
+6. **[EXPERIMENT_PARAMETERS_EXPLAINED.md](EXPERIMENT_PARAMETERS_EXPLAINED.md)** - 参数详解
 
 ---
 
@@ -365,44 +368,79 @@ wait
 
 | 维度 | 内容 |
 |------|------|
-| **时间** | 20-40分钟 |
-| **费用** | $0.13 - $0.50 |
-| **步骤** | 5步完成 |
+| **时间** | 15-30分钟 |
+| **费用** | $0.10 - $0.40 |
+| **步骤** | 3步完成（纯RunPod） |
 | **结果** | 8种方案 + 8种指标 |
 | **输出** | JSON + 文本 + 图表 |
 
 ---
 
-## ⚡ 立即开始
+## ⚡ 立即开始（纯RunPod操作）
 
-### 最简单的开始方式
+### 最简单的开始方式（3步）
 
-1. **创建Pod**: RunPod.io → Deploy → RTX 4090
-2. **上传代码**: `scp -r -P <PORT> ./vggt root@<IP>:/workspace/`
-3. **运行这一行**:
+**在RunPod终端依次执行：**
+
 ```bash
-cd /workspace/vggt && bash scripts/runpod_setup_comprehensive.sh <<< "y" && bash /workspace/run_quick_test.sh
-```
-4. **查看结果**: `cat /workspace/results/quick_test/comprehensive_report.txt`
-5. **下载**: `scp -r -P <PORT> root@<IP>:/workspace/results ~/Desktop/`
-6. **停止Pod**: 在RunPod界面点击"Stop"
+# 步骤1: 获取代码
+cd /workspace
+git clone https://github.com/yourusername/vggt.git vggt
 
-**10-20分钟后，你将拥有完整的量化实验结果！** 🎊
+# 步骤2: 一键运行
+cd vggt
+bash scripts/runpod_full_workflow.sh quick
+
+# 步骤3: 查看结果
+cat /workspace/results/quick_test_*/comprehensive_report.txt
+```
+
+**或者复制这一行（超级快速）：**
+
+```bash
+cd /workspace && git clone https://github.com/yourusername/vggt.git vggt && cd vggt && bash scripts/runpod_full_workflow.sh quick
+```
+
+**15分钟后，你将拥有完整的量化实验结果！** 🎊
+
+### 下载结果
+
+```bash
+# 在RunPod终端
+cd /workspace
+tar -czf results.tar.gz results/
+
+# 然后在RunPod Web界面下载 /workspace/results.tar.gz
+```
+
+### 完成后
+
+在RunPod界面点击 "Stop" 停止Pod避免计费
 
 ---
 
 ## 🔗 快速链接
 
-- RunPod: https://runpod.io
-- 项目GitHub: <YOUR_REPO_URL>
-- 问题反馈: <YOUR_ISSUE_URL>
+- **RunPod平台**: https://runpod.io
+- **ETH3D数据集**: https://www.eth3d.net
+- **问题反馈**: 查看项目GitHub Issues
+
+---
+
+## 💡 核心特点
+
+✅ **纯RunPod工作流** - 无需本地操作
+✅ **一键执行** - 单个命令完成所有步骤
+✅ **自动化** - 环境设置、数据下载、实验运行全自动
+✅ **低成本** - 快速测试仅需 $0.10
+✅ **专业输出** - 8种方案完整对比
 
 ---
 
 **需要帮助？**
 
-- 查看 [RUNPOD_COMPREHENSIVE_GUIDE.md](RUNPOD_COMPREHENSIVE_GUIDE.md) - 完整指南
-- 查看 [RUNPOD_QUICK_COMMANDS.md](RUNPOD_QUICK_COMMANDS.md) - 命令参考
 - 查看 [常见问题](#常见问题) - 本页上方
+- 查看 [RUNPOD_QUICK_COMMANDS.md](RUNPOD_QUICK_COMMANDS.md) - 命令参考
+- 查看 [RUNPOD_COMPREHENSIVE_GUIDE.md](RUNPOD_COMPREHENSIVE_GUIDE.md) - 完整指南
 
 **祝实验顺利！** 🚀
