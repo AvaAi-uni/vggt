@@ -5,24 +5,18 @@
 ```bash
 cd /workspace/vggt
 
-# 方式1：完整安装（首次运行）
-bash runpod_start.sh
+# 步骤1：修复数据集结构（必须先运行）
+bash fix_dataset_structure.sh
 
-# 方式2：直接训练（如果已安装依赖和数据集）
+# 步骤2：启动训练
 bash train.sh eth3d_fp32_quick_test
 ```
 
-### 📋 诊断工具
+### 📚 重要文档
 
-```bash
-# 如果找到 0 张图像
-bash check_dataset.sh
-
-# 如果缺少模块
-bash fix_now.sh
-```
-
-查看详细说明：[FINAL_RUN.md](FINAL_RUN.md)
+- **[QUANTIZATION_GUIDE.md](QUANTIZATION_GUIDE.md)** - 量化方法详解（必读！）
+- [FINAL_RUN.md](FINAL_RUN.md) - 运行说明
+- [START_HERE.md](START_HERE.md) - 详细指南
 
 ## 训练命令
 

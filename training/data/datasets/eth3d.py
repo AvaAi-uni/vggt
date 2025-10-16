@@ -138,7 +138,7 @@ class ETH3DDataset(BaseDataset):
         if scenes is None:
             scene_dirs = [
                 d for d in os.listdir(self.ETH3D_DIR)
-                if osp.isdir(osp.join(self.ETH3D_DIR, d))
+                if osp.isdir(osp.join(self.ETH3D_DIR, d)) and d not in ['training', 'test', '__pycache__']
             ]
         else:
             scene_dirs = scenes
