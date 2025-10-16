@@ -92,10 +92,10 @@ if [ $? -eq 0 ]; then
     echo "现在可以运行："
     echo "  bash train.sh eth3d_fp32_quick_test"
     echo ""
-    echo "或者："
+    echo "或者手动运行："
     echo "  cd training"
     echo "  export PYTHONPATH=/workspace/vggt:\$PYTHONPATH"
-    echo "  python launch.py --config eth3d_fp32_quick_test"
+    echo "  torchrun --nproc_per_node=1 launch.py --config eth3d_fp32_quick_test"
     echo ""
 else
     echo ""

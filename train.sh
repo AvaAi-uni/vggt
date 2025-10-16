@@ -27,6 +27,19 @@ echo "PYTHONPATH: ${PYTHONPATH}"
 echo "============================================================================"
 echo ""
 
-# 切换到 training 目录并运行
+# 检测可用的 GPU 数量
+if command -v nvidia-smi &> /dev/null; then
+    NUM_GPUS=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
+else
+    NUM_GPUS=1
+fi
+
+echo "检测到 ${NUM_GPUS} 个 GPU"
+echo ""
+
+# 切换到 training 目录并使用 torchrun 启动分布式训练
 cd "${PROJECT_ROOT}/training"
-python launch.py --config ${CONFIG_NAME}
+torchrun \
+    --nproc_per_node=${NUM_GPUS} \
+    --master_port=29500 \
+    launch.py --config ${CONFIG_NAME}
