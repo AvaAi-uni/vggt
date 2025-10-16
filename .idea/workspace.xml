@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a37142ad-8ac0-4d74-a534-cc9542fa6d79" name="Changes" comment="8">
+      <change afterPath="$PROJECT_DIR$/RUNPOD完整流程.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/立即修复并运行.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/config/eth3d_fp32_baseline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/config/eth3d_fp32_baseline.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/config/eth3d_fp32_quick_test.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/config/eth3d_fp32_quick_test.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +87,7 @@
       <workItem from="1760557346406" duration="50000" />
       <workItem from="1760557405544" duration="118000" />
       <workItem from="1760558608385" duration="35000" />
-      <workItem from="1760558655840" duration="10318000" />
+      <workItem from="1760558655840" duration="11089000" />
     </task>
     <task id="LOCAL-00001" summary="8">
       <option name="closed" value="true" />
@@ -197,7 +201,15 @@
       <option name="project" value="LOCAL" />
       <updated>1760593062111</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="8">
+      <option name="closed" value="true" />
+      <created>1760595283920</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1760595283920</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
