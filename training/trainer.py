@@ -124,8 +124,10 @@ class Trainer:
         # 'where' tracks training progress from 0.0 to 1.0 for schedulers
         self.where = 0.0
 
-        self._setup_device(device)
+        # IMPORTANT: Must initialize distributed backend BEFORE setting up device
+        # because _setup_device calls get_machine_local_and_dist_rank() which needs dist to be initialized
         self._setup_torch_dist_and_backend(cuda, distributed)
+        self._setup_device(device)
 
         # Setup logging directory and configure logger
         safe_makedirs(self.logging_conf.log_dir)

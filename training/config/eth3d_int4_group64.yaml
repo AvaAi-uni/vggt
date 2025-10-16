@@ -5,6 +5,7 @@
 
 defaults:
   - eth3d_int4_group128     # 继承Group-128配置
+  - _self_
 
 exp_name: eth3d_int4_group64
 
