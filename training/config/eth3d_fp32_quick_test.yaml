@@ -1,0 +1,150 @@
+# ============================================================================
+# ETH3D + FP32 快速测试配置 (RunPod 优化版)
+# ============================================================================
+#
+# 用途：快速验证环境和代码是否正常工作
+# 特点：
+# - 极小的数据集长度（100 batch）
+# - 较少的图像序列长度
+# - 频繁的验证和日志
+# - 适合 RunPod 环境快速测试
+#
+# 预计运行时间：5-10分钟
+#
+# ============================================================================
+
+defaults:
+  - eth3d_fp32_baseline
+
+# ============================================================================
+# 实验标识
+# ============================================================================
+exp_name: eth3d_fp32_quick_test
+run_name: ${exp_name}
+
+# ============================================================================
+# 快速测试参数 (大幅降低以加速)
+# ============================================================================
+max_epochs: 2                # 只训练2个epoch
+
+# 严格限制 batch 数量
+limit_train_batches: 50      # 训练只跑50个batch
+limit_val_batches: 10        # 验证只跑10个batch
+
+# 减小 batch size
+max_img_per_gpu: 4           # 降低到4（从12）
+
+# 增加验证频率
+val_epoch_freq: 1            # 每个epoch都验证
+
+# ============================================================================
+# 数据集配置 - 快速测试版
+# ============================================================================
+data:
+  train:
+    _target_: data.dynamic_dataloader.DynamicTorchDataset
+    num_workers: 2             # 降低worker数量
+    max_img_per_gpu: ${max_img_per_gpu}
+    common_config:
+      img_size: ${img_size}
+      patch_size: ${patch_size}
+      debug: False
+      repeat_batch: False
+      training: True
+      get_nearby: True
+      load_depth: False
+      inside_random: True
+      allow_duplicate_img: True
+      augs:
+        scales: [0.9, 1.1]     # 减小增强范围
+      rescale: True
+      rescale_aug: True
+      landscape_check: True
+    dataset:
+      _target_: data.composed_dataset.ComposedDataset
+      dataset_configs:
+        - _target_: data.datasets.eth3d.ETH3DDataset
+          ETH3D_DIR: data/eth3d
+          split: train
+          min_num_images: 3    # 降低最小图像数（从5）
+          max_num_images: 8    # 大幅降低最大图像数（从20）
+          len_train: 200       # 大幅降低虚拟长度（从10000）
+
+  val:
+    _target_: data.dynamic_dataloader.DynamicTorchDataset
+    num_workers: 2
+    max_img_per_gpu: ${max_img_per_gpu}
+    common_config:
+      img_size: ${img_size}
+      patch_size: ${patch_size}
+      debug: False
+      repeat_batch: False
+      training: False
+      get_nearby: True
+      load_depth: False
+      inside_random: False
+      allow_duplicate_img: False
+      augs:
+        scales: null
+      rescale: True
+      rescale_aug: False
+      landscape_check: True
+    dataset:
+      _target_: data.composed_dataset.ComposedDataset
+      dataset_configs:
+        - _target_: data.datasets.eth3d.ETH3DDataset
+          ETH3D_DIR: data/eth3d
+          split: test
+          min_num_images: 3
+          max_num_images: 8
+          len_test: 50         # 大幅降低（从1000）
+
+# ============================================================================
+# 日志配置 - 更频繁的日志
+# ============================================================================
+logging:
+  log_dir: logs/${exp_name}
+  log_visuals: False         # 禁用可视化以加速
+  log_freq: 5                # 更频繁的日志（从10）
+  log_level_primary: INFO
+  log_level_secondary: WARNING
+  all_ranks: False
+
+  tensorboard_writer:
+    _target_: train_utils.tb_writer.TensorBoardLogger
+    path: ${logging.log_dir}/tensorboard
+
+  scalar_keys_to_log:
+    train:
+      keys_to_log:
+        - loss_objective
+        - loss_camera
+        - loss_conf_depth
+    val:
+      keys_to_log:
+        - loss_objective
+        - loss_camera
+        - loss_conf_depth
+
+  # 禁用可视化日志
+  log_visual_frequency:
+    train: 999999
+    val: 999999
+  visuals_per_batch_to_log: 0
+
+  visuals_keys_to_log:
+    train:
+      modality: image
+      keys_to_log: []
+    val:
+      modality: image
+      keys_to_log: []
+
+# ============================================================================
+# 检查点配置
+# ============================================================================
+checkpoint:
+  save_dir: ${logging.log_dir}/checkpoints
+  save_freq: 1               # 每个epoch都保存
+  resume_checkpoint_path: null
+  strict: False
