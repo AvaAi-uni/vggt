@@ -1,22 +1,28 @@
 # VGGT - ETH3D Training with Quantization
 
-## RunPod 快速启动
+## 🚀 RunPod 快速启动
 
 ```bash
 cd /workspace/vggt
+
+# 方式1：完整安装（首次运行）
 bash runpod_start.sh
+
+# 方式2：直接训练（如果已安装依赖和数据集）
+bash train.sh eth3d_fp32_quick_test
 ```
 
-### 如果遇到错误（找到0张图像 或 缺少hydra模块）
+### 📋 诊断工具
 
 ```bash
+# 如果找到 0 张图像
+bash check_dataset.sh
+
+# 如果缺少模块
 bash fix_now.sh
 ```
 
-然后再运行训练：
-```bash
-bash train.sh eth3d_fp32_quick_test
-```
+查看详细说明：[FINAL_RUN.md](FINAL_RUN.md)
 
 ## 训练命令
 

@@ -156,9 +156,14 @@ class ETH3DDataset(BaseDataset):
                 continue
 
             # 加载场景图像列表
+            # ETH3D 可能使用 'images' 或 'dslr_undistorted_images' 目录
             images_dir = osp.join(scene_path, "images")
             if not osp.exists(images_dir):
-                logging.warning(f"Images directory not found: {images_dir}")
+                images_dir = osp.join(scene_path, "dslr_undistorted_images")
+
+            if not osp.exists(images_dir):
+                logging.warning(f"Images directory not found for scene {scene_name}")
+                logging.warning(f"  Checked: {scene_path}/images and {scene_path}/dslr_undistorted_images")
                 continue
 
             # 获取所有图像文件
