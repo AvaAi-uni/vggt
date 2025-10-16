@@ -349,12 +349,7 @@ class ETH3DDataset(BaseDataset):
 
             # ETH3D通常不提供深度图，使用零深度图
             # 在实际训练中，可以使用预计算的深度或在线估计
-            if self.load_depth:
-                # 可以扩展支持预计算的深度图
-                depth_map = np.zeros(image.shape[:2], dtype=np.float32)
-                logging.warning("ETH3D depth loading not implemented, using zero depth")
-            else:
-                depth_map = np.zeros(image.shape[:2], dtype=np.float32)
+            depth_map = np.zeros(image.shape[:2], dtype=np.float32)
 
             original_size = np.array(image.shape[:2])
 

@@ -82,8 +82,8 @@ data:
           ETH3D_DIR: data/eth3d
           split: train
           min_num_images: 5
-          max_num_images: 20
-          len_train: 10000      # 虚拟数据集长度
+          max_num_images: 12    # 降低（从20）避免内存问题
+          len_train: 2000       # 降低（从10000）加速训练
 
   val:
     _target_: data.dynamic_dataloader.DynamicTorchDataset
@@ -111,8 +111,8 @@ data:
           ETH3D_DIR: data/eth3d
           split: test
           min_num_images: 5
-          max_num_images: 20
-          len_test: 1000
+          max_num_images: 12    # 降低（从20）
+          len_test: 400         # 降低（从1000）
 
 # ============================================================================
 # 损失函数配置
