@@ -5,11 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a37142ad-8ac0-4d74-a534-cc9542fa6d79" name="Changes" comment="8">
-      <change afterPath="$PROJECT_DIR$/RUNPOD完整流程.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/立即修复并运行.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/START_HERE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/runpod_start.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/training/config/eth3d_fp32_baseline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/config/eth3d_fp32_baseline.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/training/config/eth3d_fp32_quick_test.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/config/eth3d_fp32_quick_test.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMPLETION_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMPREHENSIVE_QUANTIZATION_GUIDE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXPERIMENT_PARAMETERS_EXPLAINED.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NEW_FRAMEWORK_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PROJECT_STRUCTURE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/QUICK_START_COMPREHENSIVE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUNPOD_COMPLETE_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUNPOD_COMPREHENSIVE_GUIDE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUNPOD_PURE_WORKFLOW.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUNPOD_QUICK_COMMANDS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUNPOD_START_HERE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUNPOD完整流程.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/START_HERE_COMPREHENSIVE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UPDATE_V3.0_PURE_RUNPOD.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V3.0_FEATURES.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/download_dataset.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/quick_fix.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/runpod_setup.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/fix_dependencies.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/run_all_experiments.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/runpod_full_workflow.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/runpod_setup.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/runpod_setup_comprehensive.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup_runpod_complete.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup_runpod_environment.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_eth3d.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/一键启动训练.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/立即修复并运行.sh" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +114,7 @@
       <workItem from="1760557346406" duration="50000" />
       <workItem from="1760557405544" duration="118000" />
       <workItem from="1760558608385" duration="35000" />
-      <workItem from="1760558655840" duration="11089000" />
+      <workItem from="1760558655840" duration="13361000" />
     </task>
     <task id="LOCAL-00001" summary="8">
       <option name="closed" value="true" />
@@ -209,7 +236,15 @@
       <option name="project" value="LOCAL" />
       <updated>1760595283920</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="8">
+      <option name="closed" value="true" />
+      <created>1760595302965</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1760595302965</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
