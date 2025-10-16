@@ -7,6 +7,7 @@
 #
 # 注意：PyTorch需要根据CUDA版本单独安装
 #   CUDA 11.8: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+#   CUDA 12.1: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 #   CPU版本: pip install torch torchvision torchaudio
 #
 # ============================================================================
@@ -16,8 +17,8 @@
 # torchvision>=0.15.0
 # torchaudio>=2.0.0
 
-# 数值计算和图像处理
-numpy>=1.21.0
+# 数值计算和图像处理（重要：锁定 NumPy 1.x 版本）
+numpy>=1.21.0,<2.0.0      # 必须 <2.0 以兼容 PyTorch
 opencv-python>=4.5.0
 pillow>=9.0.0
 scipy>=1.7.0
@@ -38,6 +39,9 @@ fvcore>=0.1.5
 iopath>=0.1.9
 einops>=0.6.0
 timm>=0.9.0
+
+# 文件匹配工具（用于检查点保存）
+wcmatch>=8.4.0
 
 # 开发工具（可选）
 pytest>=7.0.0
