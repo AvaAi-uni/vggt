@@ -7,7 +7,16 @@ cd /workspace/vggt
 bash runpod_start.sh
 ```
 
-这个脚本会自动完成所有设置并启动训练。
+### 如果遇到错误（找到0张图像 或 缺少hydra模块）
+
+```bash
+bash fix_now.sh
+```
+
+然后再运行训练：
+```bash
+bash train.sh eth3d_fp32_quick_test
+```
 
 ## 训练命令
 

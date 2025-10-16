@@ -69,16 +69,33 @@ Train Epoch: [0]  [0/50]  Batch Time: 2.345  ...
 
 ## 常见问题
 
-### Q: 下载太慢怎么办？
-A: 脚本支持断点续传，可以中断后重新运行：
+### Q: 找到 0 张图像怎么办？
+
+脚本会自动尝试修复。如果仍然失败，手动检查：
+
 ```bash
-bash runpod_start.sh
+# 查看解压后的目录结构
+ls -la data/eth3d/
+
+# 如果看到 multi_view_training_dslr_undistorted 目录
+mv data/eth3d/multi_view_training_dslr_undistorted data/eth3d/training
+
+# 验证
+find data/eth3d/training -name "*.JPG" | wc -l
 ```
 
-### Q: 如何检查数据集？
+### Q: ModuleNotFoundError: No module named 'hydra'
+
+运行：
 ```bash
-ls data/eth3d/training/
-find data/eth3d/training -name "*.JPG" | wc -l  # 应该 > 3000
+pip install -r requirements.txt
+pip install -e .
+```
+
+### Q: 下载太慢怎么办？
+脚本支持断点续传：
+```bash
+bash runpod_start.sh
 ```
 
 ### Q: 如何监控训练？
