@@ -63,8 +63,13 @@ else
 fi
 echo ""
 
+# 安装 vggt 包
+echo "[7/8] 安装 vggt 包..."
+pip install -e .
+echo ""
+
 # 下载 ETH3D 数据集
-echo "[7/7] 下载 ETH3D 数据集..."
+echo "[8/8] 下载 ETH3D 数据集..."
 if [ -d "data/eth3d" ] && [ "$(ls -A data/eth3d)" ]; then
     echo "✓ ETH3D 数据集已存在"
 else
@@ -132,6 +137,14 @@ except Exception as e:
     print(f'✗ fvcore: {e}')
     sys.exit(1)
 
+try:
+    import vggt
+    from vggt.utils.geometry import closed_form_inverse_se3
+    print(f'✓ vggt 模块: 已安装')
+except Exception as e:
+    print(f'✗ vggt 模块: {e}')
+    sys.exit(1)
+
 print()
 print('✓ 所有依赖检查通过！')
 "
@@ -144,16 +157,15 @@ if [ $? -eq 0 ]; then
     echo ""
     echo "下一步："
     echo "  1. 快速测试（5-10分钟）："
-    echo "     cd training"
-    echo "     python launch.py --config eth3d_fp32_quick_test"
+    echo "     bash train.sh eth3d_fp32_quick_test"
     echo ""
     echo "  2. 正式训练："
-    echo "     python launch.py --config eth3d_fp32_baseline"
+    echo "     bash train.sh eth3d_fp32_baseline"
     echo ""
     echo "  3. 批量运行所有实验："
-    echo "     cd .."
     echo "     python scripts/run_all_experiments.py"
     echo ""
+    echo "注意：必须使用 train.sh 脚本运行，或手动设置 PYTHONPATH"
     echo "============================================================================"
 else
     echo ""
