@@ -65,7 +65,7 @@ data:
       _target_: data.composed_dataset.ComposedDataset
       dataset_configs:
         - _target_: data.datasets.eth3d.ETH3DDataset
-          ETH3D_DIR: data/eth3d
+          ETH3D_DIR: /workspace/vggt/data/eth3d
           split: train
           min_num_images: 3    # 降低最小图像数（从5）
           max_num_images: 8    # 大幅降低最大图像数（从20）
@@ -94,7 +94,7 @@ data:
       _target_: data.composed_dataset.ComposedDataset
       dataset_configs:
         - _target_: data.datasets.eth3d.ETH3DDataset
-          ETH3D_DIR: data/eth3d
+          ETH3D_DIR: /workspace/vggt/data/eth3d
           split: test
           min_num_images: 3
           max_num_images: 8
